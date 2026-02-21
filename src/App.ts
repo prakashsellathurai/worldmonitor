@@ -1,20 +1,14 @@
 
 import {
-  JobBoardPanel
-} from '@/components/jobs/JobBoardPanel';
-import {
-  ResumeAnalysisPanel
-} from '@/components/jobs/ResumeAnalysisPanel';
+  ATSPanel
+} from '@/components/jobs/ATSPanel';
 import {
   RiskPanel
 } from '@/components/jobs/RiskPanel';
 import {
-  PreparationPanel
-} from '@/components/jobs/PreparationPanel';
-import {
   UpdateProfilePanel
 } from '@/components/jobs/UpdateProfilePanel';
-import { jobService } from '@/services/job-monitor';
+import { jobAggregator } from '@/services/job-aggregator';
 
 export interface CountryBriefSignals {
   protests: number;
@@ -30,10 +24,8 @@ export interface CountryBriefSignals {
 
 export class App {
   private container: HTMLElement;
+  private atsPanel: ATSPanel;
   private riskPanel: RiskPanel;
-  private jobBoardPanel: JobBoardPanel;
-  private resumePanel: ResumeAnalysisPanel;
-  private prepPanel: PreparationPanel;
   private profilePanel: UpdateProfilePanel;
 
   constructor(containerId: string) {
@@ -42,16 +34,14 @@ export class App {
     this.container = el;
 
     // Initialize Panels
+    this.atsPanel = new ATSPanel();
     this.riskPanel = new RiskPanel();
-    this.jobBoardPanel = new JobBoardPanel();
-    this.resumePanel = new ResumeAnalysisPanel();
-    this.prepPanel = new PreparationPanel();
     this.profilePanel = new UpdateProfilePanel();
   }
 
   public async init(): Promise<void> {
-    // Start services
-    jobService.startPolling(); // Starts the 10m polling simulation
+    // Start job aggregation polling
+    jobAggregator.startPolling();
 
     // Render Layout
     this.renderLayout();
@@ -81,11 +71,9 @@ export class App {
     grid.className = 'panels-grid';
 
     // Append Panels to Grid
-    // Risk Panel (Full Width if possible, or just first)
+    // ATS Panel (main job tracking)
+    grid.appendChild(this.atsPanel.getElement());
     grid.appendChild(this.riskPanel.getElement());
-    grid.appendChild(this.jobBoardPanel.getElement());
-    grid.appendChild(this.resumePanel.getElement());
-    grid.appendChild(this.prepPanel.getElement());
     grid.appendChild(this.profilePanel.getElement());
 
     mainContent.appendChild(grid);

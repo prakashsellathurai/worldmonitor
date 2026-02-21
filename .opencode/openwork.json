@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "worldmonitor",
+    "createdAt": 1771594210327,
+    "preset": "starter"
+  },
+  "authorizedRoots": [
+    "C:\\Users\\Prakash\\Documents\\work\\projects\\Aiprojects\\worldmonitor"
+  ]
+}
